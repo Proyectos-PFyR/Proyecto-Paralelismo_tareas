@@ -169,7 +169,7 @@ package object Matrices {
    * RETORNO
    * Matriz:  			         Matriz resultante de multiplicar m1 y m2
    * **************************************************************************** */
-  def mulMatrizSec(m1: Matriz, m2: Matriz): Matriz =
+  def multMatrizRec(m1: Matriz, m2: Matriz): Matriz =
   {
     val n = m1.length
 
@@ -191,10 +191,10 @@ package object Matrices {
       val b21 = subMatriz(m2, m, 0, m)
       val b22 = subMatriz(m2, m, m, m)
 
-      val c11 = sumMatriz(mulMatrizSec(a11, b11), mulMatrizSec(a12, b21))
-      val c12 = sumMatriz(mulMatrizSec(a11, b12), mulMatrizSec(a12, b22))
-      val c21 = sumMatriz(mulMatrizSec(a21, b11), mulMatrizSec(a22, b21))
-      val c22 = sumMatriz(mulMatrizSec(a21, b12), mulMatrizSec(a22, b22))
+      val c11 = sumMatriz(multMatrizRec(a11, b11), multMatrizRec(a12, b21))
+      val c12 = sumMatriz(multMatrizRec(a11, b12), multMatrizRec(a12, b22))
+      val c21 = sumMatriz(multMatrizRec(a21, b11), multMatrizRec(a22, b21))
+      val c22 = sumMatriz(multMatrizRec(a21, b12), multMatrizRec(a22, b22))
 
       c11.zip(c12).map { case (filaC11, filaC12) => filaC11 ++ filaC12 } ++ c21.zip(c22).map { case (filaC21, filaC22) => filaC21 ++ filaC22}
     }
@@ -209,34 +209,40 @@ package object Matrices {
    * RETORNO
    * Matriz:  			         Matriz resultante de multiplicar m1 y m2
    * **************************************************************************** */
-  def mulMatrizRecPar1(m1: Matriz, m2: Matriz): Matriz =
+  def multMatrizRecPar(m1: Matriz, m2: Matriz): Matriz =
   {
     val n = m1.length
 
-    if (n == 1)
+    if(n == 8)
     {
-      Vector(Vector(m1(0)(0) * m2(0)(0)))
+      multMatrizRec(m1, m2)
     }
     else
     {
-      val m = n / 2
+      if (n == 1) {
+        Vector(Vector(m1(0)(0) * m2(0)(0)))
+      }
+      else
+      {
+        val m = n / 2
 
-      val a11 = subMatriz(m1, 0, 0, m)
-      val a12 = subMatriz(m1, 0, m, m)
-      val a21 = subMatriz(m1, m, 0, m)
-      val a22 = subMatriz(m1, m, m, m)
+        val a11 = subMatriz(m1, 0, 0, m)
+        val a12 = subMatriz(m1, 0, m, m)
+        val a21 = subMatriz(m1, m, 0, m)
+        val a22 = subMatriz(m1, m, m, m)
 
-      val b11 = subMatriz(m2, 0, 0, m)
-      val b12 = subMatriz(m2, 0, m, m)
-      val b21 = subMatriz(m2, m, 0, m)
-      val b22 = subMatriz(m2, m, m, m)
+        val b11 = subMatriz(m2, 0, 0, m)
+        val b12 = subMatriz(m2, 0, m, m)
+        val b21 = subMatriz(m2, m, 0, m)
+        val b22 = subMatriz(m2, m, m, m)
 
-      val c11 = task(sumMatriz(mulMatrizRecPar1(a11, b11), mulMatrizRecPar1(a12, b21)))
-      val c12 = task(sumMatriz(mulMatrizRecPar1(a11, b12), mulMatrizRecPar1(a12, b22)))
-      val c21 = task(sumMatriz(mulMatrizRecPar1(a21, b11), mulMatrizRecPar1(a22, b21)))
-      val c22 = task(sumMatriz(mulMatrizRecPar1(a21, b12), mulMatrizRecPar1(a22, b22)))
+        val c11 = task(sumMatriz(multMatrizRecPar(a11, b11), multMatrizRecPar(a12, b21)))
+        val c12 = task(sumMatriz(multMatrizRecPar(a11, b12), multMatrizRecPar(a12, b22)))
+        val c21 = task(sumMatriz(multMatrizRecPar(a21, b11), multMatrizRecPar(a22, b21)))
+        val c22 = task(sumMatriz(multMatrizRecPar(a21, b12), multMatrizRecPar(a22, b22)))
 
-      c11.join().zip(c12.join()).map { case (filaC11, filaC12) => filaC11 ++ filaC12 } ++ c21.join().zip(c22.join()).map { case (filaC21, filaC22) => filaC21 ++ filaC22 }
+        c11.join().zip(c12.join()).map { case (filaC11, filaC12) => filaC11 ++ filaC12 } ++ c21.join().zip(c22.join()).map { case (filaC21, filaC22) => filaC21 ++ filaC22 }
+      }
     }
   }
 
