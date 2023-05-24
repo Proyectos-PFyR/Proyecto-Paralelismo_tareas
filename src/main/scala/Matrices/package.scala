@@ -60,7 +60,6 @@ package object Matrices {
   def multMatrizPar(m1: Matriz, m2: Matriz): Matriz = {
     val m2t = transpuesta(m2)
     val limite = 2
-    val n = m1.length
 
     def auxPar(inf: Int, sup: Int): Matriz = {
       if (sup - inf < limite) Vector.tabulate(1, m2.length) { case (i, j) => prodEscalar(m1(inf), m2t(j)) }
@@ -70,12 +69,7 @@ package object Matrices {
         x ++ y
       }
     }
-    if (n == 1) {
-      Vector(Vector(m1(0)(0) * m2(0)(0)))
-    }
-    else {
       auxPar(0, m1.length)
-    }
   }
 
   /** ****************************************************************************
